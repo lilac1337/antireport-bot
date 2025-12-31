@@ -1,0 +1,33 @@
+# Reference: https://build-cpp.github.io/cmkr/cmake-toml
+[project]
+name = "antireport"
+
+[vcpkg]
+version = "2025.12.12"
+packages = [
+    "dpp"    
+]
+
+[find-package]
+dpp = {}
+OpenSSL = {}
+
+[target.antireport]
+cmake-before = "set(CMAKE_EXPORT_COMPILE_COMMANDS ON)"
+type = "executable"
+sources = [
+    "src/**.hxx",
+    "src/**.cxx"
+]
+link-libraries = [
+    "dpp::dpp",
+    "OpenSSL::SSL" 
+]    
+gcc.private-compile-options = [
+    "-lpthread",
+    "-Wshadow",
+    "-Wall",
+    "-Wextra",
+    "-lz"
+]
+compile-features = ["cxx_std_23"]
