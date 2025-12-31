@@ -1,4 +1,7 @@
 * anti-repot bot
+USE AT YOUR OWN RISK!!!!!! the account linked to the bot via the token will be liable for anything reposted by it and will almost certinaly be terminated eventually
+i'm not sure what happens to servers with this bot as of now
+
 * features
 the bot deletes any message containing a word found in words.conf, if it sees them it replaces it with a webhook version
 currently messages containing an image are ignored, this will probably be added later
