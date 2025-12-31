@@ -1,33 +1,33 @@
 * anti-repot bot
-USE AT YOUR OWN RISK!!!!!! the account linked to the bot via the token will be liable for anything reposted by it and will almost certinaly be terminated eventually  
-i'm not sure what happens to servers with this bot as of now
-  
+USE AT YOUR OWN RISK!!!!!! the account linked to the bot via the token will be liable for anything reposted by it and will almost certinaly be terminated eventually.
+i'm not sure what happens to servers with this bot as of now.
+
 * features
-the bot deletes any message containing a word found in words.conf, if it sees them it replaces it with a webhook version  
-currently messages containing an image are ignored, this will probably be added later  
-  
+the bot deletes any message containing a word found in words.conf, if it sees them it replaces it with a webhook version.
+currently messages containing an image are ignored, this will probably be added later.
+
 * building
 ** requirements
-~cmake~ must be installed from your distro's package manager, every other lilbrary is gotten automatically from vcpkg when building  
-  
+~cmake~ must be installed from your distro's package manager, every other lilbrary is gotten automatically from vcpkg when building.
+
 ** compiling
 simply run
 #+BEGIN_SRC shell
 cmake -B build
 cmake --build build
 #+END_SRC
-then move ~words.conf~, ~channels.conf~, and ~token.conf~ to the build folder and start the bot by running ~./antireport~ in the build directory  
-  
+then move ~words.conf~, ~channels.conf~, and ~token.conf~ to the build folder and start the bot by running ~./antireport~ in the build directory.
+
 * configuration
-the bot must be configured prior to running, especially ~channels.conf~ and ~token.conf~, as it needs the proper webhook urls, channel ids, and token to run  
-both configs come with an example and a comment at the top showing proper usage  
+the bot must be configured prior to running, especially ~channels.conf~ and ~token.conf~, as it needs the proper webhook urls, channel ids, and token to run.
+both configs come with an example and a comment at the top showing proper usage.
   
 ** words.conf
-simply add words to the file separated by a newline
-  
+simply add words to the file separated by a newline.
+
 ** channels.conf
-add the ~webhook url~ separated by the ~channel id~, which you need to enable developer settings to copy, with each pair separated by a newline  
-you MUST replace the example pairs in ~channel.conf~ with those corresponding to your own servers channels in order for the bot to work  
-  
+add the ~webhook url~ separated by the ~channel id~, which you need to enable developer settings to copy, with each pair separated by a newline.
+you MUST replace the example pairs in ~channel.conf~ with those corresponding to your own servers channels in order for the bot to work.
+
 ** token.conf
-just paste the bot's token  
+just paste the bot's token.
