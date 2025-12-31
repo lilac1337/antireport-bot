@@ -136,6 +136,8 @@ void report::bot::handler() noexcept {
 	});
   
     bot->on_ready([](const dpp::ready_t &event) {
+        (void)event;
+        
         bot->set_presence(dpp::presence(dpp::ps_dnd, dpp::at_custom, "I'm watching you."));
         });
 

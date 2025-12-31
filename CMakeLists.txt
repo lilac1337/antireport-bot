@@ -72,6 +72,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU") #
 		-Wshadow
 		-Wall
 		-Wextra
+		-Werror
 		-lz
 	)
 endif()

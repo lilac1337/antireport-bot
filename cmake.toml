@@ -28,6 +28,7 @@ gcc.private-compile-options = [
     "-Wshadow",
     "-Wall",
     "-Wextra",
+    "-Werror",
     "-lz"
 ]
 compile-features = ["cxx_std_23"]
