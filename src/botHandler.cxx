@@ -26,9 +26,21 @@
 }
 
 void report::bot::handleMessage(const dpp::message_create_t &event) noexcept {
-    const std::string &message = event.msg.content;
-
-    if (!shouldDelete(message) || !event.msg.attachments.empty())
+    const dpp::message_type type = event.msg.type;
+    std::string *message = nullptr;
+    std::string newMessage;
+    const std::vector<std::pair<dpp::user, dpp::guild_member>> &mentions = event.msg.mentions;
+    
+    if (type == dpp::mt_reply && !mentions.empty()) {
+        newMessage = event.msg.content;
+        
+        newMessage.append(std::format(" {}", mentions.at(0).first.get_mention()));
+        message = &newMessage;
+    } else {
+        message = const_cast<std::string*>(&event.msg.content);
+    }
+    
+    if (!shouldDelete(*message) || !event.msg.attachments.empty())
         return;
 
     const dpp::snowflake messageChannelID = event.msg.channel_id;
@@ -40,9 +52,9 @@ void report::bot::handleMessage(const dpp::message_create_t &event) noexcept {
     if (it != webhooks.end()) {
         it->avatar_url = event.msg.author.get_avatar_url();
         it->name = event.msg.author.global_name;
-
+        
         bot->message_delete(event.msg.id, messageChannelID);
-        bot->execute_webhook(*it, dpp::message(message));
+        bot->execute_webhook(*it, dpp::message(*message));
     }
 }
 
@@ -127,7 +139,6 @@ void report::bot::handler() noexcept {
         bot->log(dpp::ll_critical, e.what());
         return;
     }
-    
     
 	bot->on_message_create([](const dpp::message_create_t &event) {
 		if (!event.msg.author.is_bot()) {
