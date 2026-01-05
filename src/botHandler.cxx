@@ -26,22 +26,20 @@
 }
 
 void report::bot::handleMessage(const dpp::message_create_t &event) noexcept {
-    const dpp::message_type type = event.msg.type;
-    std::string *message = nullptr;
-    std::string newMessage;
+    if (!shouldDelete(event.msg.content) || !event.msg.attachments.empty())
+        return;
+
     const std::vector<std::pair<dpp::user, dpp::guild_member>> &mentions = event.msg.mentions;
+    const dpp::message_type type = event.msg.type;
+    std::string *message = const_cast<std::string*>(&event.msg.content);
+    std::string newMessage;
     
     if (type == dpp::mt_reply && !mentions.empty()) {
         newMessage = event.msg.content;
         
         newMessage.append(std::format(" {}", mentions.at(0).first.get_mention()));
         message = &newMessage;
-    } else {
-        message = const_cast<std::string*>(&event.msg.content);
     }
-    
-    if (!shouldDelete(*message) || !event.msg.attachments.empty())
-        return;
 
     const dpp::snowflake messageChannelID = event.msg.channel_id;
 
