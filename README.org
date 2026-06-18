@@ -3,7 +3,7 @@ USE AT YOUR OWN RISK!!!!!! the account linked to the bot via the token will be l
 i'm not sure what happens to servers with this bot as of now.
 
 * features
-the bot deletes any message containing a word found in words.conf, if it sees them it replaces it with a webhook version.
+the bot deletes any message containing a word found in words.conf, if it sees them it replaces it with an identical webhook version, protecting the account that originally posted the message.
 currently messages containing an image are ignored, this will probably be added later.
 
 * building
