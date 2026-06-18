@@ -8,7 +8,7 @@ currently messages containing an image are ignored, this will probably be added 
 
 * building
 ** requirements
-~cmake~ must be installed from your distro's package manager, every other lilbrary is gotten automatically from vcpkg when building.
+~cmake~ must be installed from your distro's package manager, every other library is gotten automatically from vcpkg when building.
 
 ** compiling
 simply run
