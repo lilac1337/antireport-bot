@@ -32,4 +32,5 @@ add the ~webhook url~ separated by the ~channel id~, which you need to enable de
 you MUST replace the example pairs in ~channel.conf~ with those corresponding to your own servers channels in order for the bot to work.
 
 ** token.conf
-just paste the bot's token.
+create a bot on https://discord.com/developers/ and enable ~Server Members Intent~ and ~Message Content Intent~, give the bot admin priveldges and invite it to the server. 
+then you can paste the bot's token into ~token.conf~
