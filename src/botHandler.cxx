@@ -56,8 +56,8 @@ void report::bot::handleMessage(const dpp::message_create_t &event) noexcept {
     }
 }
 
-void report::bot::loadChannelConfig(const std::string configPath) {
-    std::fstream stream{ configPath, stream.in };
+void report::bot::loadChannelConfig(const std::string &configPath) {
+    std::fstream stream{ configPath.data(), stream.in };
     
     if (!stream.is_open())
         throw ConfigValueException("Couldn't load channel config.");
@@ -74,7 +74,7 @@ void report::bot::loadChannelConfig(const std::string configPath) {
                 continue;
             }
 
-            wh.channel_id = std::stoull(word.data());
+            wh.channel_id = std::stoull(std::string(std::string_view(word)));
         }
 
         webhooks.emplace_back(wh);
@@ -83,8 +83,8 @@ void report::bot::loadChannelConfig(const std::string configPath) {
     bot->log(dpp::ll_info, std::format("Loaded channel config ({} channels).", webhooks.size()));
 }
 
-void report::bot::loadWordConfig(const std::string configPath) {
-    std::fstream stream{ configPath, stream.in };
+void report::bot::loadWordConfig(const std::string &configPath) {
+    std::fstream stream{ configPath.data(), stream.in };
 
     if (!stream.is_open())
         throw ConfigValueException("Couldn't load word config.");
@@ -99,8 +99,8 @@ void report::bot::loadWordConfig(const std::string configPath) {
     bot->log(dpp::ll_info, std::format("Loaded word config ({} words).", words.size()));
 }
 
-void report::bot::loadTokenConfig(const std::string configPath) {
-    std::fstream stream{ configPath, stream.in };
+void report::bot::loadTokenConfig(const std::string &configPath) {
+    std::fstream stream{ configPath.data(), stream.in };
 
     if (!stream.is_open())
         throw ConfigValueException("Couldn't load token config.");
@@ -111,8 +111,6 @@ void report::bot::loadTokenConfig(const std::string configPath) {
         
         botToken = line;
     }
-    
-//    bot->log(dpp::ll_info, std::format("Loaded word config ({} words).", words.size()));
 }
 
 void report::bot::handler() noexcept {
@@ -124,9 +122,9 @@ void report::bot::handler() noexcept {
         return;
     }
     
-    dpp::cluster newBot(botToken.data(), dpp::i_default_intents | dpp::i_message_content);
+//    dpp::cluster newBot(botToken.data(), dpp::i_default_intents | dpp::i_message_content);
     
-    bot = &newBot;        
+    bot = std::make_unique<dpp::cluster>(botToken.data(), dpp::i_default_intents | dpp::i_message_content);
     bot->on_log(dpp::utility::cout_logger());
 
     try {
