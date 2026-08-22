@@ -2,6 +2,7 @@
 
 #include <dpp/appcommand.h>
 #include <dpp/dispatcher.h>
+#include <dpp/guild.h>
 #include <dpp/misc-enum.h>
 #include <fstream>
 
@@ -13,6 +14,12 @@
     }
 
     return str;
+}
+
+[[nodiscard]] std::string report::bot::getNickname(const dpp::snowflake guildId, const dpp::snowflake userId) noexcept {
+    dpp::guild_member guildMem = dpp::find_guild_member(guildId, userId);
+
+    return guildMem.get_nickname();
 }
 
 [[nodiscard]] bool report::bot::shouldDelete(const std::string &message) noexcept {
@@ -28,11 +35,13 @@
 void report::bot::handleMessage(const dpp::message_create_t &event) noexcept {
     if (!shouldDelete(event.msg.content) || !event.msg.attachments.empty())
         return;
-
+    
+    const std::string nickname = getNickname(event.msg.guild_id, event.msg.author.id);
     const std::vector<std::pair<dpp::user, dpp::guild_member>> &mentions = event.msg.mentions;
     const dpp::message_type type = event.msg.type;
     std::string *message = const_cast<std::string*>(&event.msg.content);
     std::string newMessage;
+    std::string name = nickname.empty() ? event.msg.author.global_name : nickname;
     
     if (type == dpp::mt_reply && !mentions.empty()) {
         newMessage = event.msg.content;
@@ -49,7 +58,7 @@ void report::bot::handleMessage(const dpp::message_create_t &event) noexcept {
 
     if (it != webhooks.end()) {
         it->avatar_url = event.msg.author.get_avatar_url();
-        it->name = event.msg.author.global_name;
+        it->name = name;
         
         bot->message_delete(event.msg.id, messageChannelID);
         bot->execute_webhook(*it, dpp::message(*message));
@@ -121,8 +130,6 @@ void report::bot::handler() noexcept {
         std::cout << e.what() << '\n';
         return;
     }
-    
-//    dpp::cluster newBot(botToken.data(), dpp::i_default_intents | dpp::i_message_content);
     
     bot = std::make_unique<dpp::cluster>(botToken.data(), dpp::i_default_intents | dpp::i_message_content);
     bot->on_log(dpp::utility::cout_logger());

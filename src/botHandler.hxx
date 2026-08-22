@@ -1,6 +1,7 @@
 #pragma once
 
 #include <dpp/dpp.h>
+#include <dpp/snowflake.h>
 #include <dpp/webhook.h>
 #include <vector>
 #include <exception>
@@ -24,7 +25,8 @@ namespace report::bot {
     
     inline std::vector<dpp::webhook> webhooks;
     inline std::vector<std::string> words;
-    
+
+    [[nodiscard]] std::string getNickname(const dpp::snowflake guildId, const dpp::snowflake userId) noexcept;
     [[nodiscard]] bool shouldDelete(const std::string &message) noexcept;
 	void handleMessage(const dpp::message_create_t &event) noexcept;
     
