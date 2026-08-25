@@ -2,6 +2,7 @@
 
 #include <dpp/appcommand.h>
 #include <dpp/dispatcher.h>
+#include <dpp/exception.h>
 #include <dpp/guild.h>
 #include <dpp/misc-enum.h>
 #include <fstream>
@@ -16,10 +17,19 @@
     return str;
 }
 
-[[nodiscard]] std::string report::bot::getNickname(const dpp::snowflake guildId, const dpp::snowflake userId) noexcept {
-    dpp::guild_member guildMem = dpp::find_guild_member(guildId, userId);
+[[nodiscard]] std::string report::bot::getNickname(const dpp::snowflake guildId, const dpp::user author) noexcept {
+    dpp::guild_member guildMem;
 
-    return guildMem.get_nickname();
+    try {
+        guildMem = dpp::find_guild_member(guildId, author.id);
+    }
+    catch (dpp::cache_exception &e) {
+        return author.global_name;
+    }
+
+    std::string nickname = guildMem.get_nickname();
+
+    return nickname.empty() ? author.global_name : nickname;
 }
 
 [[nodiscard]] bool report::bot::shouldDelete(const std::string &message) noexcept {
@@ -36,12 +46,11 @@ void report::bot::handleMessage(const dpp::message_create_t &event) noexcept {
     if (!shouldDelete(event.msg.content) || !event.msg.attachments.empty())
         return;
     
-    const std::string nickname = getNickname(event.msg.guild_id, event.msg.author.id);
+    const std::string name = getNickname(event.msg.guild_id, event.msg.author);
     const std::vector<std::pair<dpp::user, dpp::guild_member>> &mentions = event.msg.mentions;
     const dpp::message_type type = event.msg.type;
     std::string *message = const_cast<std::string*>(&event.msg.content);
     std::string newMessage;
-    std::string name = nickname.empty() ? event.msg.author.global_name : nickname;
     
     if (type == dpp::mt_reply && !mentions.empty()) {
         newMessage = event.msg.content;
